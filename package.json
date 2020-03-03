@@ -1,0 +1,25 @@
+{
+  "name": "glo_repair_company",
+  "version": "1.0.0",
+  "description": "Site Repair Company",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Savitski-k/GLO_repair_company.git"
+  },
+  "author": "Savitski.k",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Savitski-k/GLO_repair_company/issues"
+  },
+  "homepage": "https://github.com/Savitski-k/GLO_repair_company/index.html",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  },
+  "dependencies": {
+    "browser-sync": "^2.26.7"
+  }
+}
