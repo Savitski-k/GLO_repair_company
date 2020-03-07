@@ -1,54 +1,60 @@
 // Подключение модулей -->
-// Сам Gulp
-const gulp = require('gulp');
+// Gulp
+const { src, dest, watch } = require('gulp');
 // Локальный сервер BrowserSync
 const browserSync = require('browser-sync').create();
+// Препроцессор Sass
+const sass = require("gulp-sass");
+// Автопрефиксер
+const autoprefixer = require('gulp-autoprefixer');
 // Минимизатор CSS
 const cleanCSS = require('gulp-clean-css');
-// Переименование файлов CSS
+// Переименовываем файлы стилей CSS
 const rename = require("gulp-rename");
 
 
-
-
-// Cервер BrowserSync 
-function localbrowser() {
+// Таски --> 
+// Сервер BrowserSync
+function bs() {
+    serveSass();
     browserSync.init({
         server: {
             baseDir: "./"
         }
     });
-    gulp.watch("./*.html").on('change', browserSync.reload);
+    watch("./*.html").on('change', browserSync.reload);
+    watch("./sass/**/*.scss", serveSass);
+    watch("./sass/**/*.sass", serveSass);
+    watch("./js/*.js").on('change', browserSync.reload);
 };
 
-
-
-//Таск на стили CSS
-function styles() {
-    // Берем рабочий файл CSS
-    return gulp.src('src/css/*.css')
-
-        //Минификация CSS
+// Препроцессор Sass + Автопрефиксер + Минимазация CSS + Переименование 
+function serveSass() {
+    // Откуда берем
+    return src("./sass/**/*.sass", "./sass/**/*.scss")
+        // Sass
+        .pipe(sass())
+        // Автопрефиксер
+        .pipe(autoprefixer({
+            cascade: false
+        }))
+        // Минимизация
         .pipe(cleanCSS({
             level: 2
         }))
-
-        // Переименование файла 
+        // Переименование с суффиксом мин
         .pipe(rename({
             suffix: ".min",
             extname: ".css"
         }))
+        // Куда кладем
+        .pipe(dest("./css"))
+        .pipe(browserSync.stream());
+};
 
-        // Кладем готовый файл CSS
-        .pipe(gulp.dest('build/css'))
-}
 
 
-
-// Название тасков -->
-// Таск - Локальный сервер BrowserSync
-gulp.task('b-s', localbrowser);
-// Таск - Стили CSS 
-gulp.task('styles', styles);
+// Команда 
+exports.serve = bs;
 
 
