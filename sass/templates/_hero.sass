@@ -31,23 +31,32 @@
   &__title
     margin-bottom: 1rem
   &__text
-    font-size: 1.57rem
     line-height: 131%
+    font-size: 1.57rem
     max-width: 504px
     margin: 0
-    margin-bottom: 3rem
+    margin-bottom: 3.5rem
   &__button
-    margin-right: 20px
-    padding: 20px 35px
-  &__instagram
+    letter-spacing: 0.2px
+    line-height: 1.07rem 
+    margin-right: 14px  
+    padding: 18px 27px
+  &__outlinebtn
+    letter-spacing: 0.38px
+    line-height: 1.07rem
+    font-weight: 500
+    padding: 18px 44px 18px 44px
+  &__instagram  
     position: absolute
     left: 0
     top: 0
     max-width: 80px
     height: 100%
-  &__scroll-down
-    position: absolute
+  &__scroll-down  
+    font-family: 'Yeseva One', regular
     z-index: 3
+    font-size: 0.86rem
+    position: absolute
     display: flex
     align-items: center
     justify-content: center
@@ -67,8 +76,8 @@
       border: 2px solid $primary
       border-radius: 50%
       margin-left: 12px
-.instagram
-  display: flex
+.instagram  
+  display: flex 
   justify-content: center
   align-items: center
   background-color: $dark
@@ -76,7 +85,7 @@
     display: flex
     align-items: center
     text-transform: uppercase
-    text-decoration: none
+    text-decoration: none 
     color: $primary
     transform: rotate(90deg)
     line-height: 0.8
@@ -87,11 +96,11 @@
       height: 1px
       background-color: $primary
       margin-left: 8px
-.title
-  margin: 0
+.title  
+  // margin: 0
   font-family: 'Yeseva One', cursive
   text-transform: uppercase
   font-size: 2.857rem
-  line-height: 1.4
-  &--primary
+  line-height: 1.35
+  &--primary  
     color: $primary

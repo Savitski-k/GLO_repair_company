@@ -1,27 +1,27 @@
 {
-  "name": "glo_repair_company",
+  "name": "repair-design",
   "version": "1.0.0",
-  "description": "Site Repair Company",
+  "description": "Сайт компании по ремонту квартир",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Savitski-k/GLO_repair_company.git"
+    "url": "git+https://github.com/SergeiChervyakovsky/repair-design.git"
   },
-  "author": "Savitski.k",
+  "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Savitski-k/GLO_repair_company/issues"
+    "url": "https://github.com/SergeiChervyakovsky/repair-design/issues"
   },
-  "homepage": "https://github.com/Savitski-k/GLO_repair_company/index.html",
+  "homepage": "https://github.com/SergeiChervyakovsky/repair-design#readme",
   "devDependencies": {
     "gulp": "^4.0.2",
-    "gulp-sass": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
     "gulp-clean-css": "^4.2.0",
-    "gulp-rename": "^2.0.0"
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.0.2"
   },
   "dependencies": {
     "browser-sync": "^2.26.7"
