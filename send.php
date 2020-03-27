@@ -1,8 +1,9 @@
 <?php
 
 $userName = $_POST['userName'];
-$userEmail = $_POST['userEmail'];
 $userPhone = $_POST['userPhone'];
+$userEmail = $_POST['userEmail'];
+$userQuestion = $_POST['userQuestion'];
 
 require 'phpmailer/PHPMailer.php';
 require 'phpmailer/SMTP.php';
@@ -28,7 +29,7 @@ try {
 
     $mail->isHTML(true);                                 
     $mail->Subject = 'Новая заявка с сайта';
-    $mail->Body    = "Имя пользователя: ${userName}, его телефон: ${userPhone}. Его почта: ${userEmail}";
+    $mail->Body    = "Имя пользователя: ${userName}, его телефон: ${userPhone}, его почта: ${userEmail}, его вопрос: ${userQuestion}";
 
     $mail->send();
     header('Location: thanks.html');
