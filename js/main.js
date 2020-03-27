@@ -1,30 +1,4 @@
-/*document.addEventListener("DOMContentLoaded", function(event) { 
-  const modal = document.querySelector('.modal');
-  // получаем все кнопки, которые имею атрибут data-toggle равный modal (кнопки которые должны открывать модальное окно)
-  const modalBtn = document.querySelectorAll('[data-toggle=modal]');
-  const closeBtn = document.querySelector('.modal__close');
 
-  // функция переключение модального окна
-  const switchModal = () => {
-    modal.classList.toggle('modal_visible');
-  }
-  const removeModal = () => {
-    modal.classList.remove('modal_visible');
-  }
-
-  modalBtn.forEach(element => {
-    element.addEventListener('click', switchModal);
-  });
-
-  closeBtn.addEventListener('click', switchModal);
-
-  document.addEventListener('keydown', function (e) {
-    if (e.code == "Escape") removeModal();
-  }); 
-  document.addEventListener('click', (e) => {
-    if (e.target == modal) removeModal();
-  });
-});*/
 
 $(document).ready(function () {
   var modal = $('.modal'),
@@ -216,7 +190,8 @@ $(document).ready(function () {
           modalAnswer.toggleClass('modal-answer_visible');
           modal.removeClass('modal_visible');
           $('.modal-answer__title').text('Спасибо! Заявка успешно отправлена. Наш менеджер перезвонит Вам в течение 15 минут.');
-          $(form).text('Спасибо! Заявка успешно отправлена. Наш менеджер перезвонит Вам в течение 15 минут.');
+          $(form).text('Спасибо! Заявка успешно отправлена. Наш менеджер перезвонит Вам через 20 минут');
+          // $(form).html('<p class="modal-answer__text">Спасибо! Заявка успешно отправлена. Наш менеджер перезвонит Вам через 10 минут.</p>');
         },
         error: function(jqXHR, textStatus) {
           console.error(jqXHR + " " + textStatus);
@@ -232,4 +207,32 @@ validateForm('.footer__form');
   // маска для телефона
   $('[type=tel]').mask('+7(000) 000-00-00', {placeholder: "+7 (___) ___-__-__"});
 
+
+
+// отправка формы с помощью ajax 
+// function sendingForm(form) {
+  // $('#control-form').submit(function (event) {
+  //   event.preventDefault();
+  //   $.ajax({
+  //     type: "POST",
+  //     url: "send.php",
+  //     data: $(this).serialize(),
+  //     success: function(){
+  //     //  $('#control-form')[0].reset();
+  //       $('form').find('input').val("");
+  //       modalAnswer.toggleClass('modal-answer_visible');
+  //       // modal.removeClass('modal_visible');
+  //       $('.modal-answer__title').text('Спасибо! Заявка успешно отправлена. Наш менеджер перезвонит Вам в течение 15 минут.');
+  //     },
+  //     error: function(jqXHR, textStatus) {
+  //       console.error(jqXHR + " " + textStatus);
+  //     }
+  //   });
+  // })
+// }
+// sendingForm('#control-form');
+// sendingForm('#modal-form');
+// sendingForm('#footer-form');
+  // очистка формы
+  // $('form').find('input').val("");
 });
