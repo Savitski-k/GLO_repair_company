@@ -1,176 +1,235 @@
-// document.addEventListener("DOMContentLoaded", function(event) { 
-//   const modal = document.querySelector('.modal');
-//   const modalBtn = document.querySelectorAll('[data-toggle=modal]');
-//   const closeBtn = document.querySelector('.modal__close');
-//   const switchModal = () => {
-//     modal.classList.toggle('modal--visible');
-//   }
-//   modalBtn.forEach(element => {
-//     element.addEventListener('click', switchModal);
-//   });
-  
-//   closeBtn.addEventListener('click', switchModal);
+/*document.addEventListener("DOMContentLoaded", function(event) { 
+  const modal = document.querySelector('.modal');
+  // получаем все кнопки, которые имею атрибут data-toggle равный modal (кнопки которые должны открывать модальное окно)
+  const modalBtn = document.querySelectorAll('[data-toggle=modal]');
+  const closeBtn = document.querySelector('.modal__close');
 
-// });
+  // функция переключение модального окна
+  const switchModal = () => {
+    modal.classList.toggle('modal_visible');
+  }
+  const removeModal = () => {
+    modal.classList.remove('modal_visible');
+  }
+
+  modalBtn.forEach(element => {
+    element.addEventListener('click', switchModal);
+  });
+
+  closeBtn.addEventListener('click', switchModal);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.code == "Escape") removeModal();
+  }); 
+  document.addEventListener('click', (e) => {
+    if (e.target == modal) removeModal();
+  });
+});*/
 
 $(document).ready(function () {
   var modal = $('.modal'),
-    modalBtn = $('[data-toggle="modal"]'),
-    closeBtn = $('.modal__close');
+    modalAnswer = $('.modal-answer'),
+    modalBtn = $('[data-toggle=modal]'),
+    closeBtn = $('.modal__close'),
+    closeBtnAnswer = $('.modal-answer__close');
 
   modalBtn.on('click', function () {
-    modal.toggleClass('modal--visible');
-  });
-  closeBtn.on('click', function () {
-    modal.toggleClass('modal--visible');
+    modal.toggleClass('modal_visible');
   });
 
-  var mySwiper = new Swiper('.swiper-container', {
+  closeBtn.on('click', function () {
+    modal.toggleClass('modal_visible');
+  });
+  closeBtnAnswer.on('click', function () {
+    modalAnswer.toggleClass('modal-answer_visible');
+  });
+  // закрытие модального окна нажатием на кнопку Esc
+  $(document).keydown(function (e) {
+    if (e.code == 'Escape') {
+      modal.removeClass('modal_visible');
+      modalAnswer.removeClass('modal-answer_visible');
+    };
+  });
+  // закрытие модального окна при нажатие на любое место вне его
+  $(document).on('click', function (e) {
+    if (modal.is(e.target)) {
+      modal.removeClass('modal_visible');
+    };
+  });
+  // закрытие модального окна при нажатие на любое место вне его
+  $(document).on('click', function (e) {
+    if (modalAnswer.is(e.target)) {
+      modalAnswer.removeClass('modal-answer_visible');
+    };
+  });
+
+  // появление кнопки наверх , если спустились вниз на 1400px
+  $(window).scroll(function () {
+    if ($(this).scrollTop() > 1400) {
+      $('.pageup').fadeIn();
+    } else {
+      $('.pageup').fadeOut();
+    }
+  });
+  // плавная прокрутка 
+  $('#up').on('click', function (e) {
+    e.preventDefault();
+    $('html, body').animate({
+      scrollTop: 0
+    }, '300');
+  });
+
+  $('.hero__scroll-down').on('click', function(){
+    console.log('ты нажал кнопку вниз');
+    var el = $(this).attr('href');
+    $('html,body').animate({
+      scrollTop: $(this).offset().top - $(".hero").height()}, 2000);
+    return false;
+  });
+
+
+  // слайдер в секции Завершенные проекты
+  var projectSwiper = new Swiper('.projects__swiper-container', {
+    // Optional parameters
     loop: true,
+    effect: 'fade',
+    fadeEffect: {
+      crossFade: true
+    },
     pagination: {
-      el: '.swiper-pagination',
+      el: '.projects__swiper-pagination',
       type: 'bullets',
+      clickable: true
     },
     navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
+      nextEl: '.projects__swiper-button-next',
+      prevEl: '.projects__swiper-button-prev',
     },
+  });
+
+  var next = $('.projects__swiper-button-next');
+  var prev = $('.projects__swiper-button-prev');
+  var bullets = $('.projects__swiper-pagination');
+
+  next.css('left', prev.width() + bullets.width() + 40)
+  bullets.css('left', prev.width() + 20)
+
+  // слайдер в секции 6 шагов
+  var stepsSwiper = new Swiper('.steps__swiper-container', {
+    // Optional parameters
+    loop: true,
+    effect: 'fade',
+    fadeEffect: {
+      crossFade: true
+    },
+    pagination: {
+      el: '.steps__swiper-pagination',
+      type: 'bullets',
+      clickable: true
+    },
+    navigation: {
+      nextEl: '.steps__swiper-button-next',
+      prevEl: '.steps__swiper-button-prev',
+    },
+  });
+
+  var next2 = $('.steps__swiper-button-next');
+  var prev2 = $('.steps__swiper-button-prev');
+  var bullets2 = $('.steps__swiper-pagination');
+
+  next2.css('left', prev2.width() + bullets2.width() + 40)
+  bullets2.css('left', prev2.width() + 20)
+
+  // переключение слайдов по табам из секции 6 
+
+  $('.steps__tabs-item').on('click', function () {
+    $('.steps__tabs-item').removeClass('active');
+    $(this).addClass('active');
+    const e = $(this).data('index');
+    stepsSwiper.slideTo(e);
   })
 
-  var next = $('.swiper-button-next');
-  var prev = $('.swiper-button-prev');
-  var bullets = $('.swiper-pagination');
-
-  next.css('left', prev.width() + 10 + bullets.width() + 10)
-  bullets.css('left', prev.width() + 10)
-
-  new WOW().init();
+  stepsSwiper.on('slideChange', (function () {
+    let e = stepsSwiper.activeIndex - 1;
+    if (e === 6) {e=0};
+    $('.steps__tabs-item').removeClass('active');
+    $('.steps__tabs-item').eq(e).addClass('active');
+  }))
 
 
-  // Валидация формы
-  $('.modal__form').validate({
+  // запустить анимацию, когда будет в области видимости
+    $(window).scroll(function () {  
+      if ($(this).scrollTop() >= $('.steps').offset().top - $(window).height()/2) {
+        $('.steps__animation').show();
+        }    
+    });
+
+  new WOW().init(); // библиотека для проигрывания анимации только когда в области видимости, работает с animate.css
+
+  // валидация форм
+  function validateForm(form){
+  $(form).validate({
     errorClass: "invalid",
+    errorElement: "div",
     rules: {
-      // строчное правило
+      // simple rule, converted to {required:true}
       userName: {
-        required:true,
+        required: true,
         minlength: 2,
         maxlength: 15
       },
-      modalCheckbox: {
-        required:true,
+      userPhone: {
+        required: true,
+        minlength: 17
       },
-      footerCheckbox: {
-        required:true,
-      },
-      userPhone: "required",
-      // правило-объект(блок)
+      userQuestion: "required",
+      // compound rule
       userEmail: {
         required: true,
         email: true
       }
-    }, //сообщения
+    },
     messages: {
       userName: {
         required: "Заполните поле",
-        minlength: "Имя не короче двух символов",
-        maxlength: "Имя не более 15 символов"
+        minlength: "Слишком короткое имя",
+        maxlength: "Имя не должно превышать 15 символов"
       },
-      userPhone: "Заполните поле",
+      userPhone: {
+        required: "Заполните поле",
+        minlength: "Некорректно введен номер"
+      },
+      userQuestion: "Заполните поле",
       userEmail: {
         required: "Заполните поле",
-        email: "Введите корректный email"
-      },
-      modalCheckbox: {
-        required:"Подтвердите согласие на обработку данных"
-      },
+        email: "Введите Ваш email в формате name@domain.com"
+      }
     },
+    submitHandler: function (form) {
+      $.ajax({
+        type: "POST",
+        url: "send.php",
+        data: $(form).serialize(),
+        success: function(){
+         $(form)[0].reset();
+          $(form).find('input').val("");
+          modalAnswer.toggleClass('modal-answer_visible');
+          modal.removeClass('modal_visible');
+          $('.modal-answer__title').text('Спасибо! Заявка успешно отправлена. Наш менеджер перезвонит Вам в течение 15 минут.');
+          $(form).text('Спасибо! Заявка успешно отправлена. Наш менеджер перезвонит Вам в течение 15 минут.');
+        },
+        error: function(jqXHR, textStatus) {
+          console.error(jqXHR + " " + textStatus);
+        }
+      });
+    }
   });
+}
+validateForm('.modal__form');
+validateForm('.control__form');
+validateForm('.footer__form');
 
-  // Валидация формы
-  $('.footer__form').validate({
-    errorClass: "invalid",
-    rules: {
-      // строчное правило
-      userName: {
-        required:true,
-        minlength: 2,
-        maxlength: 15
-      },
-      userQuestion: {
-        required:true,
-        minlength: 10
-      },
-      footerCheckbox: {
-        required:true,
-      },
-      userPhone: "required",
-      
-    }, //сообщения
-    messages: {
-      userName: {
-        required: "Заполните поле",
-        minlength: "Имя не короче двух символов",
-        maxlength: "Имя не более 15 символов"
-      },
-      userQuestion: {
-        required: "Заполните поле",
-        minlength: "Задайте вопрос корректно"
-      },
-      userPhone: "Заполните поле",
-      footerCheckbox: {
-        required:"Подтвердите согласие на обработку данных"
-      },
-    },
-  });
-
-  // Валидация формы
-  $('.control__form').validate({
-    errorClass: "invalid",
-    rules: {
-      // строчное правило
-      userName: {
-        required:true,
-        minlength: 2,
-        maxlength: 15
-      },
-      controlCheckbox: {
-        required:true,
-      },
-      userPhone: "required",
-      
-    }, //сообщения
-    messages: {
-      userName: {
-        required: "Заполните поле",
-        minlength: "Имя не короче двух символов",
-        maxlength: "Имя не более 15 символов"
-      },
-      userPhone: "Заполните поле",
-      controlCheckbox: {
-        required:"Подтвердите согласие на обработку данных"
-      },
-    },
-  });
-
-
-  // маска для номера телефона
-
-  $('[type=tel]').mask('+7(000) 00-00-000', {placeholder: "+7 (___) __-__-___"});
+  // маска для телефона
+  $('[type=tel]').mask('+7(000) 000-00-00', {placeholder: "+7 (___) ___-__-__"});
 
 });
-
-
-// messages: {
-//   userName: {
-//     required: "Имя обязательно",
-//     minlength: "Имя не короче двух букв"
-//   },
-//   userPhone: "Телефон обязателен",
-//   userEmail: {
-//     required: "Обязательно укажите email",
-//     email: "Введите в формате: name@domain.com"
-//   }
-// }
-
-

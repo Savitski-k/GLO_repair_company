@@ -4,36 +4,47 @@
   top: 0
   width: 100%
   z-index: 99
-  background-color: $dark
+  background: $dark
   padding: 24px 0
+  &__container
+    max-width: 1256px
+    width: 86%
+    margin: 0 auto
 .menu
   display: flex
   justify-content: space-between
   align-items: center
+  width: 100%
 .logo
-  font-size: 1.075rem
   color: $primary
   text-transform: uppercase
+  font-size: 1.07rem
 .nav
   &__item
-    font-size: 1rem
-    font-weight: normal
-    line-height: 1.14rem
-    text-decoration: none  
+    display: inline-block
+    text-decoration: none 
     color: $light
     text-transform: uppercase
-    margin-right: 2.63rem
-    transition: color 0.2s
+    margin-right: 2.5rem
+    transition: 0.2s       
+    &::after
+      content: ''
+      display: block
+      height: 1px
+      background: $primary
+      width: 0%
+      transition: 0.2s 
     &:hover
       color: $primary
+      &::after
+        width: 100% 
 .phone
   color: $primary
+  transition: 0.2s
+  &:hover
+    color: $light
 .contacts
   &__phone
-    margin-right: 3.1rem  
+    margin-right: 42px  
   &__button
-   font-weight: 500
-   letter-spacing: 0.35px
-   padding: 13px 20px
-
-
+    padding: 10px 20px

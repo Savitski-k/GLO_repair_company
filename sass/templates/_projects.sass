@@ -1,81 +1,55 @@
 .projects
-  padding-bottom: 30rem
+  padding-bottom: 29.5rem
+  &__swiper
+    &-container
+      &_mt-15
+        margin-top: -15rem
+    &-slide
+      display: flex
+      flex-wrap: wrap 
+      margin-bottom: 6rem       
+    &-pagination
+      width: auto !important
+      bottom: 0 !important
+      & .swiper-pagination-bullet
+        background: rgba($light, 0.3)
+        width: 0.7rem
+        height: 0.7rem
+        margin: 0 9px !important
+        &-active
+          background: $light
+    &-button
+      &-prev, &-next
+        bottom: 0
+        top: auto
+        background-size: 42px
+        width: 42px
+        height: 14px
+        &::after
+          display: none
+      &-prev
+        background: url('../img/arrow-prev.svg') no-repeat center
+        left: 0
+      &-next
+        background: url('../img/arrow-next.svg') no-repeat center
 .swiper
-  &-slide
-    display: flex
-    flex-wrap: wrap
+  &-slide    
+    img
+      width: 100%
     &__text
-      flex-basis: 50% 
-      margin-bottom: 2.42rem
-      padding-bottom: 2rem
+      flex-basis: 34%
+      padding-bottom: 1.3rem      
     &__heading
       font-size: 1.285rem
-      line-height: 1.78rem
-      font-family: 'Yeseva One', cursive 
+      line-height: 138.6%
+      font-family: 'Yeseva One', cursive
       color: $primary
       text-transform: uppercase
-      margin-bottom: 0.64rem
-  &-pagination
-    &-bullet
-      background-color: rgba($light, 0.3)
-      &-active
-        background-color: $light
-  &-button
-    &-prev, &-next
-      bottom: 0
-      top: auto
-      background-size: 42px
-      width: 42px
-      height: 14px
-      &::after
-        display: none 
-    &-prev
-      left: 0
-      background: url('../img/arrow-prev.svg') no-repeat center
-    &-next
-      background: url('../img/arrow-next.svg') no-repeat center  
-.swiper-container-horizontal>.swiper-pagination-bullets
-  width: auto
-  bottom: -2px
+      margin-bottom: 0.4rem
+      font-weight: normal    
+    &__value
+      font-size: 1.07rem
+      line-height: 1.428rem
 
-// @media screen and ( max-width: 760px )
-//   .col  
-//     &-50
-//       width: 95%
-//   .section 
-//     padding: 50px 0  
-//     &-title
-//       text-align: center
-//       font-size: 22px
-//       &__heading
-//         display: flex
-//         flex-direction: column
-//         line-height: 138.6%
-//         text-transform: uppercase
-//         font-family: 'Yeseva One', cursive
-//         margin-bottom: 1rem
-//         font-size: 1.42rem
-//         text-align: center
-//       &__word  
-//         display: flex 
-//         align-items: center 
-//         justify-content: center
-//         &::after
-//           display: none
-//       &__text
-//         font-size: 1.28rem
-//         line-height: 2.07rem
-//         max-width: 80%
-//         margin: 0 auto
-//         text-align: center
-//         line-height: 158.48%
-//       &__image  
-//         display: flex
-//         justify-content: center
-//         align-items: center
-//         &::before, &::after
-//           content: ''
-//           width: 32px
-//           height: 2px
-//           background-color: $primary
-//           margin: 0 10px   
+  
+

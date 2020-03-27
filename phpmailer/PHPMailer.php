@@ -64,7 +64,7 @@ class PHPMailer
      * Options: null (default), 1 = High, 3 = Normal, 5 = low.
      * When null, the header is not set at all.
      *
-     * @var int|null
+     * @var int
      */
     public $Priority;
 
@@ -745,7 +745,7 @@ class PHPMailer
      *
      * @var string
      */
-    const VERSION = '6.1.5';
+    const VERSION = '6.1.4';
 
     /**
      * Error severity: message only, continue processing.
@@ -769,22 +769,11 @@ class PHPMailer
     const STOP_CRITICAL = 2;
 
     /**
-     * The SMTP standard CRLF line break.
-     * If you want to change line break format, change static::$LE, not this.
-     */
-    const CRLF = "\r\n";
-
-    /**
-     * "Folding White Space" a white space string used for line folding.
-     */
-    const FWS = ' ';
-
-    /**
-     * SMTP RFC standard line ending; Carriage Return, Line Feed.
+     * SMTP RFC standard line ending.
      *
      * @var string
      */
-    protected static $LE = self::CRLF;
+    protected static $LE = "\r\n";
 
     /**
      * The maximum line length supported by mail().
@@ -1457,7 +1446,7 @@ class PHPMailer
         ) {
             //SMTP mandates RFC-compliant line endings
             //and it's also used with mail() on Windows
-            static::setLE(self::CRLF);
+            static::setLE("\r\n");
         } else {
             //Maintain backward compatibility with legacy Linux command line mailers
             static::setLE(PHP_EOL);
@@ -1564,7 +1553,7 @@ class PHPMailer
                     $this->encodeHeader($this->secureHeader($this->Subject)),
                     $this->MIMEBody
                 );
-                $this->MIMEHeader = static::stripTrailingWSP($this->MIMEHeader) . static::$LE .
+                $this->MIMEHeader = rtrim($this->MIMEHeader, "\r\n ") . static::$LE .
                     static::normalizeBreaks($header_dkim) . static::$LE;
             }
 
@@ -1631,7 +1620,7 @@ class PHPMailer
      */
     protected function sendmailSend($header, $body)
     {
-        $header = static::stripTrailingWSP($header) . static::$LE . static::$LE;
+        $header = rtrim($header, "\r\n ") . static::$LE . static::$LE;
 
         // CVE-2016-10033, CVE-2016-10045: Don't pass -f if characters will be escaped.
         if (!empty($this->Sender) && self::isShellSafe($this->Sender)) {
@@ -1761,7 +1750,7 @@ class PHPMailer
      */
     protected function mailSend($header, $body)
     {
-        $header = static::stripTrailingWSP($header) . static::$LE . static::$LE;
+        $header = rtrim($header, "\r\n ") . static::$LE . static::$LE;
 
         $toArr = [];
         foreach ($this->to as $toaddr) {
@@ -1850,7 +1839,7 @@ class PHPMailer
      */
     protected function smtpSend($header, $body)
     {
-        $header = static::stripTrailingWSP($header) . static::$LE . static::$LE;
+        $header = rtrim($header, "\r\n ") . static::$LE . static::$LE;
         $bad_rcpt = [];
         if (!$this->smtpConnect($this->SMTPOptions)) {
             throw new Exception($this->lang('smtp_connect_failed'), self::STOP_CRITICAL);
@@ -2522,8 +2511,7 @@ class PHPMailer
      */
     public function getSentMIMEMessage()
     {
-        return static::stripTrailingWSP($this->MIMEHeader . $this->mailHeader) .
-            static::$LE . static::$LE . $this->MIMEBody;
+        return rtrim($this->MIMEHeader . $this->mailHeader, "\n\r") . static::$LE . static::$LE . $this->MIMEBody;
     }
 
     /**
@@ -2606,7 +2594,7 @@ class PHPMailer
             $altBodyEncoding = static::ENCODING_QUOTED_PRINTABLE;
         }
         //Use this as a preamble in all multipart message types
-        $mimepre = 'This is a multi-part message in MIME format.' . static::$LE  . static::$LE;
+        $mimepre = 'This is a multi-part message in MIME format.' . static::$LE;
         switch ($this->message_type) {
             case 'inline':
                 $body .= $mimepre;
@@ -2961,7 +2949,7 @@ class PHPMailer
         $disposition = 'attachment'
     ) {
         try {
-            if (!static::isPermittedPath($path) || !@is_file($path) || !is_readable($path)) {
+            if (!static::isPermittedPath($path) || !@is_file($path)) {
                 throw new Exception($this->lang('file_access') . $path, self::STOP_CONTINUE);
             }
 
@@ -3146,7 +3134,7 @@ class PHPMailer
     protected function encodeFile($path, $encoding = self::ENCODING_BASE64)
     {
         try {
-            if (!static::isPermittedPath($path) || !file_exists($path) || !is_readable($path)) {
+            if (!static::isPermittedPath($path) || !file_exists($path)) {
                 throw new Exception($this->lang('file_open') . $path, self::STOP_CONTINUE);
             }
             $file_buffer = file_get_contents($path);
@@ -3158,10 +3146,7 @@ class PHPMailer
             return $file_buffer;
         } catch (Exception $exc) {
             $this->setError($exc->getMessage());
-            $this->edebug($exc->getMessage());
-            if ($this->exceptions) {
-                throw $exc;
-            }
+
             return '';
         }
     }
@@ -3531,7 +3516,7 @@ class PHPMailer
         $disposition = 'inline'
     ) {
         try {
-            if (!static::isPermittedPath($path) || !@is_file($path) || !is_readable($path)) {
+            if (!static::isPermittedPath($path) || !@is_file($path)) {
                 throw new Exception($this->lang('file_access') . $path, self::STOP_CONTINUE);
             }
 
@@ -3950,28 +3935,15 @@ class PHPMailer
      *
      * @param string      $name  Custom header name
      * @param string|null $value Header value
-     *
-     * @throws Exception
      */
     public function addCustomHeader($name, $value = null)
     {
-        if (null === $value && strpos($name, ':') !== false) {
+        if (null === $value) {
             // Value passed in as name:value
-            list($name, $value) = explode(':', $name, 2);
+            $this->CustomHeader[] = explode(':', $name, 2);
+        } else {
+            $this->CustomHeader[] = [$name, $value];
         }
-        $name = trim($name);
-        $value = trim($value);
-        //Ensure name is not empty, and that neither name nor value contain line breaks
-        if (empty($name) || strpbrk($name . $value, "\r\n") !== false) {
-            if ($this->exceptions) {
-                throw new Exception('Invalid header name or value');
-            }
-
-            return false;
-        }
-        $this->CustomHeader[] = [$name, $value];
-
-        return true;
     }
 
     /**
@@ -4015,7 +3987,6 @@ class PHPMailer
             foreach ($images[2] as $imgindex => $url) {
                 // Convert data URIs into embedded images
                 //e.g. "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                $match = [];
                 if (preg_match('#^data:(image/(?:jpe?g|gif|png));?(base64)?,(.+)#', $url, $match)) {
                     if (count($match) === 4 && static::ENCODING_BASE64 === $match[2]) {
                         $data = base64_decode($match[3]);
@@ -4384,25 +4355,13 @@ class PHPMailer
             $breaktype = static::$LE;
         }
         // Normalise to \n
-        $text = str_replace([self::CRLF, "\r"], "\n", $text);
+        $text = str_replace(["\r\n", "\r"], "\n", $text);
         // Now convert LE as needed
         if ("\n" !== $breaktype) {
             $text = str_replace("\n", $breaktype, $text);
         }
 
         return $text;
-    }
-
-    /**
-     * Remove trailing breaks from a string.
-     *
-     * @param string $text
-     *
-     * @return string The text to remove breaks from
-     */
-    public static function stripTrailingWSP($text)
-    {
-        return rtrim($text, " \r\n\t");
     }
 
     /**
@@ -4513,15 +4472,13 @@ class PHPMailer
      */
     public function DKIM_HeaderC($signHeader)
     {
-        //Normalize breaks to CRLF (regardless of the mailer)
-        $signHeader = static::normalizeBreaks($signHeader, self::CRLF);
-        //Unfold header lines
         //Note PCRE \s is too broad a definition of whitespace; RFC5322 defines it as `[ \t]`
         //@see https://tools.ietf.org/html/rfc5322#section-2.2
         //That means this may break if you do something daft like put vertical tabs in your headers.
+        //Unfold header lines
         $signHeader = preg_replace('/\r\n[ \t]+/', ' ', $signHeader);
         //Break headers out into an array
-        $lines = explode(self::CRLF, $signHeader);
+        $lines = explode("\r\n", $signHeader);
         foreach ($lines as $key => $line) {
             //If the header is missing a :, skip it as it's invalid
             //This is likely to happen because the explode() above will also split
@@ -4541,7 +4498,7 @@ class PHPMailer
             $lines[$key] = trim($heading, " \t") . ':' . trim($value, " \t");
         }
 
-        return implode(self::CRLF, $lines);
+        return implode("\r\n", $lines);
     }
 
     /**
@@ -4558,13 +4515,13 @@ class PHPMailer
     public function DKIM_BodyC($body)
     {
         if (empty($body)) {
-            return self::CRLF;
+            return "\r\n";
         }
         // Normalize line endings to CRLF
-        $body = static::normalizeBreaks($body, self::CRLF);
+        $body = static::normalizeBreaks($body, "\r\n");
 
         //Reduce multiple trailing line breaks to a single one
-        return static::stripTrailingWSP($body) . self::CRLF;
+        return rtrim($body, "\r\n") . "\r\n";
     }
 
     /**
@@ -4585,18 +4542,17 @@ class PHPMailer
         $DKIMquery = 'dns/txt'; // Query method
         $DKIMtime = time();
         //Always sign these headers without being asked
-        //Recommended list from https://tools.ietf.org/html/rfc6376#section-5.4.1
         $autoSignHeaders = [
-            'from',
-            'to',
-            'cc',
-            'date',
-            'subject',
-            'reply-to',
-            'message-id',
-            'content-type',
-            'mime-version',
-            'x-mailer',
+            'From',
+            'To',
+            'CC',
+            'Date',
+            'Subject',
+            'Reply-To',
+            'Message-ID',
+            'Content-Type',
+            'Mime-Version',
+            'X-Mailer',
         ];
         if (stripos($headers_line, 'Subject') === false) {
             $headers_line .= 'Subject: ' . $subject . static::$LE;
@@ -4631,7 +4587,7 @@ class PHPMailer
         $headersToSign = [];
         foreach ($parsedHeaders as $header) {
             //Is this header one that must be included in the DKIM signature?
-            if (in_array(strtolower($header['label']), $autoSignHeaders, true)) {
+            if (in_array($header['label'], $autoSignHeaders, true)) {
                 $headersToSignKeys[] = $header['label'];
                 $headersToSign[] = $header['label'] . ': ' . $header['value'];
                 if ($this->DKIM_copyHeaderFields) {
@@ -4669,9 +4625,9 @@ class PHPMailer
                 //Fold long values
                 if (strlen($copiedHeader) > self::STD_LINE_LENGTH - 3) {
                     $copiedHeaderFields .= substr(
-                        chunk_split($copiedHeader, self::STD_LINE_LENGTH - 3, static::$LE . self::FWS),
+                        chunk_split($copiedHeader, self::STD_LINE_LENGTH - 3, static::$LE . ' '),
                         0,
-                        -strlen(static::$LE . self::FWS)
+                        -strlen(static::$LE . ' ')
                     );
                 } else {
                     $copiedHeaderFields .= $copiedHeader;
@@ -4683,6 +4639,7 @@ class PHPMailer
         $headerKeys = ' h=' . implode(':', $headersToSignKeys) . ';' . static::$LE;
         $headerValues = implode(static::$LE, $headersToSign);
         $body = $this->DKIM_BodyC($body);
+        $DKIMlen = strlen($body); // Length of body
         $DKIMb64 = base64_encode(pack('H*', hash('sha256', $body))); // Base64 of packed binary SHA-256 hash of body
         $ident = '';
         if ('' !== $this->DKIM_identity) {
@@ -4696,6 +4653,7 @@ class PHPMailer
             ' s=' . $this->DKIM_selector . ';' . static::$LE .
             ' a=' . $DKIMsignatureType . ';' .
             ' q=' . $DKIMquery . ';' .
+            ' l=' . $DKIMlen . ';' .
             ' t=' . $DKIMtime . ';' .
             ' c=' . $DKIMcanonicalization . ';' . static::$LE .
             $headerKeys .
@@ -4708,9 +4666,9 @@ class PHPMailer
             $headerValues . static::$LE . $dkimSignatureHeader
         );
         $signature = $this->DKIM_Sign($canonicalizedHeaders);
-        $signature = trim(chunk_split($signature, self::STD_LINE_LENGTH - 3, static::$LE . self::FWS));
+        $signature = trim(chunk_split($signature, self::STD_LINE_LENGTH - 3, static::$LE . ' '));
 
-        return static::normalizeBreaks($dkimSignatureHeader . $signature);
+        return static::normalizeBreaks($dkimSignatureHeader . $signature) . static::$LE;
     }
 
     /**
