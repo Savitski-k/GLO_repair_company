@@ -1,0 +1,119 @@
+.steps
+  position: relative
+  padding-bottom: 35.71rem
+  &__heading
+    font-size: 1.929rem
+  &__word
+    &::after
+      margin-left: 6.4rem
+  &__tabs
+    position: relative
+    list-style-type: none
+    display: flex
+    justify-content: space-between
+    flex-wrap: wrap
+    max-width: 54.52rem
+    margin-left: auto
+    margin-top: -1.2rem
+    padding: 0
+    z-index: 2
+    &-item  
+      width: 9.6rem      
+      opacity: 0.3
+      font-size: 1.07rem
+      margin-bottom: 2.9rem
+      cursor: pointer
+      margin-right: 11rem      
+      &:nth-child(3n)
+        margin-right: 0
+        width: 7.14rem
+    &-number
+      font-family: 'Yeseva One', cursive
+      text-transform: uppercase
+      border-bottom: 1px solid $primary
+    &-text
+      display: block      
+      margin-top: 0.9rem
+  &__swiper 
+    &-container
+      margin-top: -8.9rem   
+    &-slide
+      display: flex
+      justify-content: space-between
+      &-description
+        position: relative
+        max-width: 24.07rem
+      &-index
+        font-family: 'Yeseva One', cursive
+        font-size: 1.286rem 
+        line-height: 1.786rem
+        text-transform: uppercase 
+      &-heading
+        max-width: 14rem
+        font-weight: normal
+        font-size: 1.07rem
+        margin-top: 1.5rem
+      &-text
+        font-size: 1.07rem
+        line-height: 1.786rem
+        margin-top: 0.7rem
+      &-img
+        // width: 100%
+        max-width: 54.52rem
+        max-height: 27rem
+        margin-top: 8.64rem 
+        overflow: hidden
+        & img
+          width: 100%
+    &-pagination
+      width: auto !important
+      bottom: 6.9rem !important
+      & .swiper-pagination-bullet
+        background: rgba($light, 0.3)
+        width: 0.7rem
+        height: 0.7rem
+        margin: 0 9px !important
+        &-active
+          background: $light
+    &-button
+      &-prev, &-next
+        bottom: 6.9rem
+        top: auto
+        background-size: 42px
+        width: 42px
+        height: 14px
+        &::after
+          display: none
+      &-prev
+        background: url('../img/arrow-prev.svg') no-repeat center
+        left: 0
+      &-next
+        background: url('../img/arrow-next.svg') no-repeat center 
+.active
+  opacity: 1
+
+.steps__animation
+  display: none
+  
+@for $i from 0 through 5 
+  .steps__animation-#{$i+1}
+    position: absolute 
+    max-width: 60px
+    top: 10px
+    left: (100%/6)*($i+1)
+    opacity: 0
+    animation: walk 2s 0.5s*$i
+@for $i from 1 through 3 
+  .steps__animation-#{2*$i}
+    top: 40px
+  
+@keyframes walk
+  0%
+    opacity: 0
+  50%
+    opacity: 1
+  100%
+    opacity: 0
+
+
+
