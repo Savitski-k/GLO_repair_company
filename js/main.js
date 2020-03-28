@@ -88,7 +88,7 @@ $(document).ready(function () {
   next.css('left', prev.width() + bullets.width() + 40)
   bullets.css('left', prev.width() + 20)
 
-  // слайдер в секции 6 шагов
+ 
   var stepsSwiper = new Swiper('.steps__swiper-container', {
     // Optional parameters
     loop: true,
@@ -114,7 +114,7 @@ $(document).ready(function () {
   next2.css('left', prev2.width() + bullets2.width() + 40)
   bullets2.css('left', prev2.width() + 20)
 
-  // переключение слайдов по табам из секции 6 
+
 
   $('.steps__tabs-item').on('click', function () {
     $('.steps__tabs-item').removeClass('active');
@@ -161,6 +161,9 @@ $(document).ready(function () {
       userEmail: {
         required: true,
         email: true
+      },
+      allCheckbox: {
+        required:true,
       }
     },
     messages: {
@@ -177,6 +180,9 @@ $(document).ready(function () {
       userEmail: {
         required: "Заполните поле",
         email: "Введите Ваш email в формате name@domain.com"
+      },
+      allCheckbox: {
+        required:"Подтвердите согласие на обработку данных"
       }
     },
     submitHandler: function (form) {
